@@ -23,6 +23,7 @@ on:
 jobs:
   deploy-test:
     name: Deploy to Test Workspace
+    if: ${{ vars.ENABLE_DEPLOYMENTS == 'true' }}
     runs-on: ubuntu-latest
     environment: test
 

@@ -787,6 +787,16 @@ Add at **Settings → Secrets and variables → Actions → Secrets**:
 | `CLIENT_ID` | `<your-client-id>` |
 | `CLIENT_SECRET` | SPN client secret (from `terraform/dev/terraform.tfvars`) |
 
+Add at **Settings → Secrets and variables → Actions → Variables**:
+
+| Variable name | Value |
+|--------------|-------|
+| `FABRIC_TEST_WORKSPACE_ID` | Test workspace ID from Terraform output |
+| `FABRIC_PROD_WORKSPACE_ID` | Prod workspace ID from Terraform output |
+| `ENABLE_DEPLOYMENTS` | Set to `true` only after secrets, workspace IDs, environments, and SPN permissions are configured |
+
+> Deployment jobs are skipped by default in a newly copied repository. This prevents an unconfigured fork or public template from attempting a deployment. Set `ENABLE_DEPLOYMENTS=true` only after completing all CI/CD setup steps.
+
 ### deploy-test.yml
 
 **Trigger:** Push or merge to `test` branch
