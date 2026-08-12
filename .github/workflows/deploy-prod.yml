@@ -1,0 +1,63 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# deploy-prod.yml
+# Deploys the Fabric solution to the PROD workspace.
+#
+# Triggers:
+#   - Automatically when a PR is merged into the `main` branch
+#   - Manually via the "Run workflow" button in the GitHub Actions UI
+#
+# The "prod" GitHub environment should be configured with a required reviewer
+# (manual approval gate) under Settings > Environments > prod > Protection rules.
+#
+# Required GitHub repository secrets:
+#   TENANT_ID, CLIENT_ID, CLIENT_SECRET
+#
+# Required GitHub repository variables:
+#   FABRIC_PROD_WORKSPACE_ID  (from Terraform output)
+# ─────────────────────────────────────────────────────────────────────────────
+
+name: Deploy to Prod
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - README.md
+  workflow_dispatch:
+
+jobs:
+  deploy-prod:
+    name: Deploy to Prod Workspace
+    runs-on: ubuntu-latest
+
+    # "prod" environment requires manual approval before this job runs
+    environment: prod
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Deploy Fabric solution to Prod
+        env:
+          AZURE_TENANT_ID:     ${{ secrets.TENANT_ID }}
+          AZURE_CLIENT_ID:     ${{ secrets.CLIENT_ID }}
+          AZURE_CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+          FABRIC_PROD_WORKSPACE_ID:  ${{ vars.FABRIC_PROD_WORKSPACE_ID }}
+        run: python src/deploy.py --environment prod
+
+      - name: Run post-deploy tasks (Prod)
+        env:
+          AZURE_TENANT_ID:           ${{ secrets.TENANT_ID }}
+          AZURE_CLIENT_ID:           ${{ secrets.CLIENT_ID }}
+          AZURE_CLIENT_SECRET:       ${{ secrets.CLIENT_SECRET }}
+          FABRIC_PROD_WORKSPACE_ID:  ${{ vars.FABRIC_PROD_WORKSPACE_ID }}
+        run: python src/post_deploy.py --environment prod

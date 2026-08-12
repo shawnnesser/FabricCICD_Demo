@@ -1,0 +1,28 @@
+# fabric-cicd deployment configuration
+# Reference: https://microsoft.github.io/fabric-cicd/
+#
+# workspace_id values are populated after Terraform provisions the environments.
+# Replace the placeholder GUIDs with the actual workspace IDs from Terraform outputs.
+# Store the actual IDs in GitHub repository variables (not secrets), e.g.:
+#   FABRIC_TEST_WORKSPACE_ID
+#   FABRIC_PROD_WORKSPACE_ID
+
+core:
+  workspace_id:
+    test: "00000000-0000-0000-0000-000000000000"   # Replace: Terraform output workspace_id (test)
+    prod: "00000000-0000-0000-0000-000000000000"   # Replace: Terraform output workspace_id (prod)
+
+  # Path to the folder containing item definitions, relative to this file.
+  # The GitHub Actions workflow checks out the repo so this will be ./workspace
+  repository_directory: "."
+
+  # Item types to include in each deployment
+  item_types_in_scope:
+    - VariableLibrary
+    - Lakehouse
+    - Notebook
+    - DataPipeline
+    - SemanticModel
+    - Report
+
+  parameter: "parameter.yml"

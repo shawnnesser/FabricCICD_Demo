@@ -1,0 +1,14 @@
+tenant_id           = "00000000-0000-0000-0000-000000000000"
+client_id           = "00000000-0000-0000-0000-000000000000"
+client_secret       = "your-client-secret-here"
+subscription_id     = "00000000-0000-0000-0000-000000000000"
+spn_object_id       = "00000000-0000-0000-0000-000000000000"
+
+resource_group_name = "rg-fabric-cicd-test"
+capacity_location   = "East US"
+capacity_name       = "fabriccicdtest"
+capacity_sku_size   = "F8"
+
+workspace_name      = "Product Sales - Test"
+admin_user_upn      = "admin@yourtenant.onmicrosoft.com"
+admin_group_id      = ""

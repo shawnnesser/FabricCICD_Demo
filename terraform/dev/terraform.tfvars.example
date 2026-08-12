@@ -1,0 +1,20 @@
+# Copy this file to terraform.tfvars and fill in your values.
+# terraform.tfvars is excluded from Git via .gitignore - NEVER commit it.
+
+tenant_id           = "00000000-0000-0000-0000-000000000000"
+client_id           = "00000000-0000-0000-0000-000000000000"
+client_secret       = "your-client-secret-here"
+subscription_id     = "00000000-0000-0000-0000-000000000000"
+spn_object_id       = "00000000-0000-0000-0000-000000000000"
+
+resource_group_name = "rg-fabric-cicd-dev"
+capacity_location   = "East US"
+capacity_name       = "fabriccicddev"
+capacity_sku_size   = "F4"
+
+workspace_name      = "Product Sales - Dev"
+admin_user_upn      = "admin@yourtenant.onmicrosoft.com"
+
+# Optional - leave as "" to skip group role assignments
+admin_group_id      = ""
+dev_group_id        = ""

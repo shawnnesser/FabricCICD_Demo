@@ -1,0 +1,55 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# deploy-test.yml
+# Deploys the Fabric solution to the TEST workspace.
+#
+# Triggers:
+#   - Automatically when a PR is merged into the `test` branch
+#   - Manually via the "Run workflow" button in the GitHub Actions UI
+#
+# Required GitHub repository secrets:
+#   TENANT_ID, CLIENT_ID, CLIENT_SECRET
+# ─────────────────────────────────────────────────────────────────────────────
+
+name: Deploy to Test
+
+on:
+  push:
+    branches:
+      - test
+    paths-ignore:
+      - README.md
+  workflow_dispatch:
+
+jobs:
+  deploy-test:
+    name: Deploy to Test Workspace
+    runs-on: ubuntu-latest
+    environment: test
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Deploy Fabric solution to Test
+        env:
+          AZURE_TENANT_ID:     ${{ secrets.TENANT_ID }}
+          AZURE_CLIENT_ID:     ${{ secrets.CLIENT_ID }}
+          AZURE_CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+          FABRIC_TEST_WORKSPACE_ID: ${{ vars.FABRIC_TEST_WORKSPACE_ID }}
+        run: python src/deploy.py --environment test
+
+      - name: Run post-deploy tasks (Test)
+        env:
+          AZURE_TENANT_ID:          ${{ secrets.TENANT_ID }}
+          AZURE_CLIENT_ID:          ${{ secrets.CLIENT_ID }}
+          AZURE_CLIENT_SECRET:      ${{ secrets.CLIENT_SECRET }}
+          FABRIC_TEST_WORKSPACE_ID: ${{ vars.FABRIC_TEST_WORKSPACE_ID }}
+        run: python src/post_deploy.py --environment test

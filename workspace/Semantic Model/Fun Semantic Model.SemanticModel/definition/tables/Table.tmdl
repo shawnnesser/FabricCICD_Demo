@@ -1,0 +1,21 @@
+table Table
+	lineageTag: 3e813cc4-031c-41ab-b460-4ae0f005ff30
+
+	column Fun
+		dataType: int64
+		formatString: 0
+		lineageTag: 7f595f99-ce9c-441c-a767-b7652ea1ac6e
+		summarizeBy: sum
+		sourceColumn: Fun
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Table = m
+		mode: import
+		source =
+				let
+				  Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText("i45WMlSK1YlWMgKTxkqxsQA=", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [Fun = _t]),
+				  #"Changed column type" = Table.TransformColumnTypes(Source, {{"Fun", Int64.Type}})
+				in
+				  #"Changed column type"
+

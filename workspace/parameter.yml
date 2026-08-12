@@ -1,0 +1,49 @@
+# fabric-cicd parameterization configuration
+# Reference: https://microsoft.github.io/fabric-cicd/0.1.33/how_to/parameterization/
+#
+# This file defines find-and-replace rules so that environment-specific settings
+# (committed from the dev workspace) are automatically updated during deployment
+# to test and prod workspaces.
+#
+# ── How to use ────────────────────────────────────────────────────────────────
+# 1. After your dev workspace is set up and items are committed to GIT, inspect
+#    the item definition files in the workspace/ folder.
+# 2. Find any dev-specific values (SQL endpoints, storage URLs, connection strings).
+# 3. Add find_replace rules below for each value that must change per environment.
+#
+# ── Example: Semantic Model SQL endpoint parameterization ─────────────────────
+# The SQL endpoint connection string is unique per workspace.
+# The regex below captures the workspace-specific prefix and replaces it with
+# the dynamic SQL endpoint for the 'sales' lakehouse in the target workspace.
+
+find_replace:
+  - find_value: 'Sql\.Database\(\s*"([^"]*datawarehouse\.fabric\.microsoft\.com[^"]*)"\s*,'
+    replace_value:
+      _ALL_: $items.Lakehouse.DemoDataLake.$sqlendpoint
+    is_regex: "true"
+    item_type: ["SemanticModel"]
+    file_path: "**/expressions.tmdl"
+
+  - find_value: "00000000-0000-0000-0000-000000000001"
+    replace_value:
+      _ALL_: $items.Lakehouse.DemoDataLake.$id
+    item_type: "Notebook"
+    item_name: "Create Lakehouse Tables"
+    file_path: "**/notebook-content.py"
+
+  - find_value: "00000000-0000-0000-0000-000000000002"
+    replace_value:
+      _ALL_: $workspace.$id
+    item_type: "Notebook"
+    item_name: "Create Lakehouse Tables"
+    file_path: "**/notebook-content.py"
+
+# ── Example: Storage account URL parameterization ─────────────────────────────
+# Uncomment and fill in if your notebooks/pipelines reference an Azure storage URL.
+#
+# - find_value: "https://storage4dev.dfs.core.windows.net/productsales/"
+#   replace_value:
+#     test: "https://storage4test.dfs.core.windows.net/productsales/"
+#     prod: "https://storage4prod.dfs.core.windows.net/productsales/"
+#   item_type: "Notebook"
+#   item_name: "Create Lakehouse Tables"

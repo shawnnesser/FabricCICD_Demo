@@ -1,0 +1,45 @@
+# ── Terraform ────────────────────────────────────────────────────────────────
+# Provider binaries (large, downloaded by terraform init)
+**/.terraform/
+
+# State files (contain resource IDs and may contain sensitive data)
+*.tfstate
+*.tfstate.backup
+*.tfstate.*.backup
+
+# Actual variable values — NEVER commit these (contain secrets)
+terraform.tfvars
+*.tfvars.json
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# ── Python ───────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+.env
+.env.*
+!.env.example
+
+# ── Credentials ─────────────────────────────────────────────────────────────
+*.pem
+*.key
+*.pfx
+*.p12
+*.cer
+*.crt
+credentials.json
+service-account*.json
+
+# ── OS / Editor ──────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+*.swp
+.vscode/settings.json
+
+# Sample data (stored in ADLS, not git)
+data/
